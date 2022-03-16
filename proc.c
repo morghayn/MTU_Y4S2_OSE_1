@@ -6,6 +6,7 @@
 #include "x86.h"
 #include "proc.h"
 #include "spinlock.h"
+#include "trace.h"
 
 struct {
   struct spinlock lock;
@@ -88,6 +89,8 @@ allocproc(void)
 found:
   p->state = EMBRYO;
   p->pid = nextpid++;
+  p->traced=UNTRACE;
+  p->syscall_counter = 0;
 
   release(&ptable.lock);
 
@@ -196,6 +199,7 @@ fork(void)
     np->state = UNUSED;
     return -1;
   }
+  np->traced = curproc->traced ? curproc->traced : UNTRACE;
   np->sz = curproc->sz;
   np->parent = curproc;
   *np->tf = *curproc->tf;
