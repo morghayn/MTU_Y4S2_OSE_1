@@ -536,3 +536,13 @@ procdump(void)
     cprintf("\n");
   }
 }
+
+struct proc * getproc_ptable_addr(void)
+{
+  return ptable.proc;
+}
+
+struct proc * getproc_ptable_end_addr(void)
+{
+  return &ptable.proc[NPROC];
+}
